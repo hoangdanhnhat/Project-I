@@ -32,7 +32,7 @@ if __name__ == "__main__":
     icmp_id = 3417
     icmp_seq = 0
 
-    secretText = "Hi!"
+    secretText = "Hi!" # Change secret text here
     secretText_bin = ''.join(format(ord(char), '08b') for char in secretText)
 
     for bit in secretText_bin: 

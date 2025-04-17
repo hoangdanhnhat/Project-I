@@ -8,7 +8,7 @@ secret_text=""
 id = 0
 for packet in cap:
     try:
-        if packet.ip.src == "192.168.1.3":
+        if packet.ip.src == "192.168.1.3": # change this to match the sender ip address
             id += 1
             data_time = packet.icmp.data_time
             lsb = bin(int(data_time.raw_value[8:], 16))[-1:]

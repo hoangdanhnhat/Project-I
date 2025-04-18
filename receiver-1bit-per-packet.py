@@ -1,5 +1,4 @@
 from pyshark import * #must install tshark first with pip install tshark
-import struct
 
 file_path = "/home/ratatoui1e/Documents/projectI/pcap_files/send-new.pcapng"
 cap = FileCapture(file_path, display_filter="icmp")

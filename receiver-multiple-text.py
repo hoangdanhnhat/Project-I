@@ -13,7 +13,7 @@ length_check_buffer = []
 
 for packet in cap:
     try:
-        if packet.ip.src == "192.168.2.185":
+        if packet.ip.src == "127.0.0.1" and packet.icmp.type == 8:
             data_time = packet.icmp.data_time
             lsb = data_time.raw_value[-2:]
 

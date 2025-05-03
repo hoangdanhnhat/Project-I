@@ -9,7 +9,7 @@ for packet in cap:
     try:
         if packet.ip.src == "172.20.10.3": # change this to match the sender ip address
             data_time = packet.icmp.data_time
-            least_significant_byte = data_time.raw_value[-2:]
+            least_significant_byte = data_time.raw_value[16:18]
             secret_text_hex += least_significant_byte
 
     except AttributeError:

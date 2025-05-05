@@ -6,6 +6,7 @@ import argparse
 
 parser = argparse.ArgumentParser(description="ICMP traffic stealth sender for secret messages.")
 parser.add_argument("-m", "--message", required=True, help="Message that need to be sent!")
+parser.add_argument("-d", "--destination", required=True, help="The ip address of the receiver machine.")
 args = parser.parse_args()
 
 def build_ping_packet(dst_ip, identifier, sequence_number, chunk):
@@ -32,7 +33,7 @@ def build_ping_packet(dst_ip, identifier, sequence_number, chunk):
 
 if __name__ == "__main__":
     # Target IP address
-    target = "127.0.0.1"
+    target = args.destination
 
     sleep_time = 0.1
 

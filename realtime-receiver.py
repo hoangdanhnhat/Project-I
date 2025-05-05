@@ -1,3 +1,5 @@
+# for 2 byte per packet sender!
+
 import pyshark
 import time
 import argparse
@@ -34,15 +36,15 @@ def process_packet(packet):
     try:
         if packet.icmp.type == "8":  # ICMP Echo Request
             data_time = packet.icmp.data_time
-            lsb = data_time.raw_value[16:18]
+            lsb = data_time.raw_value[16:20] #2 bytes
 
             if state == "WAIT_START":
-                if lsb == "00":
+                if lsb == "0000":
                     zero_count += 1
                     if zero_count == 3:
                         state = "VERIFY_LENGTH"
                         length_check_buffer = []
-                        return  # Skip this third '00'
+                        return  # Skip this third '0000'
                 else:
                     zero_count = 0
 
@@ -50,7 +52,7 @@ def process_packet(packet):
                 length_check_buffer.append(lsb)
                 if len(length_check_buffer) == 2:
                     if length_check_buffer[0] == length_check_buffer[1]:
-                        expected_data_length = int(length_check_buffer[0], 16)
+                        expected_data_length = int(length_check_buffer[0][:2], 16)
                         state = "READ_DATA"
                         secret_text_hex = ""
                         data_bytes_collected = 0
@@ -60,7 +62,7 @@ def process_packet(packet):
 
             elif state == "READ_DATA":
                 if data_bytes_collected < expected_data_length:
-                    secret_text_hex += lsb
+                    secret_text_hex += lsb[2:] + lsb[:2]
                     data_bytes_collected += 1
                 if data_bytes_collected == expected_data_length:
                     try:

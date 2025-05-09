@@ -17,5 +17,5 @@ sudo python3 realtime-receiver.py -i {your_network_interface} -o {output_file_na
 ### Send the message to the real-time receiver
 
 ```python
-sudo python3 sender-2byte-per-packet.py -d {receiver_ip_address} -m "{your_message_here}"
+sudo python3 sender-2byte-per-packet.py -d {receiver_ip_address} -t {delay time between packets} -m "{your_message_here}"
 ```

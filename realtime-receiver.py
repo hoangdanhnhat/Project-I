@@ -1,4 +1,4 @@
-# for 2 byte per packet sender!
+# real-time receiver for 2 byte per packet sender!
 
 import pyshark
 import time
@@ -7,7 +7,7 @@ import argparse
 # Parse command-line arguments
 parser = argparse.ArgumentParser(description="Real-time ICMP traffic analyzer for extracting secret messages.")
 parser.add_argument("-i", "--interface", required=True, help="Network interface to capture packets (e.g., eth0, wlan0)")
-parser.add_argument("-o", "--output", required=True, help="Output file to store extracted messages")
+parser.add_argument("-o", "--output", required=False, default="result.txt", help="Output file to store extracted messages")
 args = parser.parse_args()
 
 # Configuration from arguments
@@ -39,20 +39,22 @@ def process_packet(packet):
             lsb = data_time.raw_value[16:20] #2 bytes
 
             if state == "WAIT_START":
-                if lsb == "0000":
+                first_byte, second_byte = lsb[2:], lsb[:2]
+                if f"{int(first_byte, 16) ** 2:02x}"[-2:] == second_byte:
                     zero_count += 1
                     if zero_count == 3:
                         state = "VERIFY_LENGTH"
                         length_check_buffer = []
-                        return  # Skip this third '0000'
+                        return
                 else:
                     zero_count = 0
 
             elif state == "VERIFY_LENGTH":
                 length_check_buffer.append(lsb)
                 if len(length_check_buffer) == 2:
-                    if length_check_buffer[0] == length_check_buffer[1]:
-                        expected_data_length = int(length_check_buffer[0][:2], 16)
+                    if int(length_check_buffer[0][:2], 16) + int(length_check_buffer[0][2:], 16) \
+                        == int(length_check_buffer[1][:2], 16) + int(length_check_buffer[1][2:], 16):
+                        expected_data_length = int(length_check_buffer[0][:2], 16) + int(length_check_buffer[0][2:], 16)
                         state = "READ_DATA"
                         secret_text_hex = ""
                         data_bytes_collected = 0
@@ -82,7 +84,7 @@ def process_packet(packet):
         pass
 
 def main():
-    print(f"Starting real-time ICMP capture on interface {interface}...")
+    print(f"Starting real-time ICMP capture on interface {interface}")
     print(f"Messages will be saved to {output_file}")
     
     # Initialize the output file (clear it or create it)

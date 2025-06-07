@@ -1,5 +1,13 @@
 # README
 
+## Install tshark
+
+- Fedora
+
+```
+sudo dnf install wireshark-cli -y
+```
+
 ## Install dependencies with
 
 ```python
